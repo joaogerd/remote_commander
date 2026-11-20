@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "remote-commander": {
+      "command": "/usr/bin/python3",
+      "args": [
+        "-m", "remote_commander", "mcp",
+        "--workspace", "/home/SEU_USUARIO/projetos"
+      ],
+      "env": {
+        "PYTHONPATH": "/CAMINHO/ABSOLUTO/remote-commander-beta"
+      }
+    }
+  }
+}

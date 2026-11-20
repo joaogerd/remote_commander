@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "remote-commander-beta"
+version = "0.1.0b1"
+description = "Secure-by-default, local-first Linux remote agent with web UI, MCP stdio and optional Ollama."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Remote Commander Beta contributors"}]
+classifiers = ["Programming Language :: Python :: 3", "Operating System :: POSIX :: Linux"]
+
+[project.scripts]
+remote-commander = "remote_commander.__main__:main"
+
+[tool.setuptools.package-data]
+remote_commander = ["static/*.html", "static/*.css", "static/*.js"]

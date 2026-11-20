@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Remote Commander · Beta</title>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand-mark" aria-hidden="true">⌘</div>
+      <div class="brand"><span class="eyebrow">LOCAL-FIRST · LINUX AGENT</span><h1>Remote <strong>Commander</strong></h1></div>
+      <span class="version">BETA 0.1</span>
+    </header>
+    <section id="loginPanel" class="login card">
+      <div class="hero-icon" aria-hidden="true">⌁</div>
+      <h2>Seu computador, sob seu controle.</h2>
+      <p>Conecte-se com o token secreto gerado no Linux. Nenhuma credencial é enviada a servidores de terceiros.</p>
+      <label for="token">Token de acesso</label>
+      <div class="login-line"><input id="token" type="password" placeholder="Cole o token gerado por remote-commander token" autocomplete="off" spellcheck="false"><button id="loginBtn" class="primary">Conectar</button></div>
+      <p class="hint">O token é mantido apenas nesta aba. A conexão remota exige HTTPS via Tailscale Serve.</p>
+      <p id="loginError" class="error" role="alert" aria-live="polite"></p>
+    </section>
+    <div id="app" hidden>
+      <section class="overview card">
+        <div class="status-title"><span class="online-dot"></span><span>AGENTE ONLINE</span><button id="logout" class="subtle">Sair</button></div>
+        <div class="workspace-label">WORKSPACE AUTORIZADO</div>
+        <div id="workspace" class="workspace-path mono"></div>
+        <div class="chips"><span id="chipRead" class="chip">Leitura</span><span id="chipWrite" class="chip">Escrita</span><span id="chipExec" class="chip">Comandos</span><span id="chipAI" class="chip">IA local</span></div>
+      </section>
+      <nav class="tabs" aria-label="Funções">
+        <button data-tab="files" class="active">◫ <span>Arquivos</span></button>
+        <button data-tab="terminal">›_ <span>Terminal</span></button>
+        <button data-tab="ai">✧ <span>Assistente IA</span></button>
+        <button data-tab="security">◈ <span>Segurança</span></button>
+      </nav>
+      <section id="files" class="pane card">
+        <div class="section-heading"><div><span class="eyebrow">EXPLORADOR</span><h2>Arquivos</h2></div><button id="refreshFiles" class="small">Atualizar ↻</button></div>
+        <div class="crumb"><button id="goUp" class="small">← Voltar</button><span id="folderPath" class="mono">.</span></div>
+        <div id="filesList" class="files-list" aria-live="polite"></div>
+        <div id="editorArea" hidden>
+          <div class="editor-label"><span id="fileName" class="mono"></span><span id="fileSize" class="hint"></span></div>
+          <textarea id="editor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Conteúdo do arquivo"></textarea>
+          <div class="actions"><button id="closeFile" class="small">Fechar</button><button id="saveFile" class="primary">Salvar arquivo</button></div>
+        </div>
+      </section>
+      <section id="terminal" class="pane card" hidden>
+        <div class="section-heading"><div><span class="eyebrow">EXECUÇÃO CONTROLADA</span><h2>Terminal</h2></div><span id="terminalBadge" class="chip">Desativado</span></div>
+        <p class="hint">Comandos são executados sem shell, com limite de 20 segundos. Execução não isola o computador.</p>
+        <label for="cwd">Diretório relativo ao workspace</label><input id="cwd" class="mono" value=".">
+        <label for="command">Comando</label><div class="login-line"><input id="command" class="mono" placeholder="git status --short" spellcheck="false" autocomplete="off"><button id="runCommand" class="primary">Executar</button></div>
+        <pre id="commandOutput" class="terminal-output" aria-live="polite">$ Aguardando comando…</pre>
+      </section>
+      <section id="ai" class="pane card" hidden>
+        <div class="section-heading"><div><span class="eyebrow">OLLAMA · LOCAL</span><h2>Assistente IA</h2></div><span id="modelName" class="chip">Não configurado</span></div>
+        <p class="hint">A IA lê arquivos autorizados. Qualquer pedido de execução ou escrita exige sua aprovação no painel.</p>
+        <div id="conversation" class="conversation" aria-live="polite"><div class="empty"><span class="glyph">✧</span><p>Peça para analisar seu código, explorar pastas ou inspecionar um repositório.</p></div></div>
+        <div id="pendingArea"></div>
+        <div class="chat-input"><textarea id="prompt" rows="2" placeholder="Ex.: Analise os arquivos Python deste projeto e sugira melhorias"></textarea><button id="sendChat" class="primary">Enviar ↗</button></div>
+      </section>
+      <section id="security" class="pane card" hidden>
+        <div class="section-heading"><div><span class="eyebrow">CONFIGURAÇÃO</span><h2>Segurança</h2></div></div>
+        <p>O painel só escuta em <code>127.0.0.1</code>. Para acesso pelo celular, publique o serviço apenas na sua tailnet com <strong>Tailscale Serve</strong> e HTTPS.</p>
+        <ul><li>Acesso à API exige token de 256 bits.</li><li>Arquivos ficam limitados ao workspace; diretórios de credenciais conhecidos são bloqueados.</li><li>Gravação e execução exigem habilitação explícita na inicialização.</li><li>A IA local pede aprovação humana para operações com efeitos.</li><li><strong>Executar Python ou Git não é uma sandbox:</strong> o processo recebe os privilégios do usuário Linux.</li><li>A integração MCP via stdio executa ferramentas já habilitadas sem a confirmação do painel web.</li></ul>
+        <p class="hint">Beta experimental. Não utilize em estações institucionais, redes públicas ou dados sensíveis sem autorização e auditoria apropriadas.</p>
+      </section>
+      <div id="toast" role="status" aria-live="polite"></div>
+    </div>
+    <footer>REMOTE COMMANDER <span>·</span> Open source · Sem telemetria · Sem limite próprio de chamadas</footer>
+  </div>
+</body>
+</html>
