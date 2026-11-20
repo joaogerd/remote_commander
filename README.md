@@ -25,8 +25,9 @@
 Requisitos: **Python 3.10+** e uma pasta de trabalho já existente. Não é preciso instalar dependências Python.
 
 ```bash
-# Descompacte o ZIP e entre na pasta:
-cd remote-commander-beta
+# clone o repositório e entre na pasta:
+git clone https://github.com/joaogerd/remote_commander.git
+cd remote-commander
 
 # Crie um token secreto (uma única vez):
 python3 -m remote_commander init
